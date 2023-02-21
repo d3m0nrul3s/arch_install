@@ -1,0 +1,114 @@
+##### install arch_linux
+
+# base
+
+loadkeys us
+
+ping 
+
+cfdisk	?
+-dos
+
+512M sda1
+60G sda2 основной диск
+4G sda3
+type swap
+write: yes
+
+lsblk
+mkfs.vfat -F 32 /dev/sda1
+mkfs.ext4 /dev/sda2
+mkswap /dev/sda3
+swapon
+
+mount /dev/sda2 /mnt
+mkdir /mnt/boot
+mount /dev/sda1 /mnt/boot
+pacstrap /mnt linux linux-firmware networkmanager grub wpa_supplicant base base-devel
+
+genfstab -U /mnt 
+genfstab -U /mnt > /mnt/etc/fstab
+cat !$
+
+arch-chroot /mnt
+passwd
+useradd -m d3m0n
+ls -la /home
+passwd d3m0n
+
+usermod -aG wheel d3m0n
+groups d3m0n
+pacman -S sudo nano 
+
+nano /etc/sudoers
+#%whell ALL=(ALL:ALL) ALL
+
+nano /etc/locale.gen
+search: en_US
+locale-gen
+loadkeys us
+
+nano /etc/vconsole.conf
+KEYMAP=es
+
+
+grub-install /dev/sda
+grub-mkconfig -o /boot/grub/grub.cfg
+
+
+echo d3m0n > /etc/hostname 
+nano /etc/hosts
+127.0.0.1	localhost
+::1		localhost
+127.0.0.1	d3m0n.localhost d3m0n
+
+pacman -S neofetch
+
+reboot now
+
+#internet
+
+sudo systemctl start NetworkManager.service
+systemctl enable NetworkManager
+systemctl start wpa_supplicant.service
+systemctl enable wpa_supplicant.service
+exit
+
+#AUR
+
+pacman -S git 
+mkdir Desktop/d3m0n/repos
+cd !$
+git clone https://aur.archlinux.org/paru-bin.git
+cd paru-bin
+makepkg -si
+password: должен запросить пароль
+
+#blackarch_repository
+
+mkdir blackarch
+curl -O https://blackarch.org/strap.sh
+chmod +x strap.sh
+su
+./strap.sh
+pacman -Sy
+
+pacman -Sgg | grep blackarch |awk '{print $1}' | sort -u | less
+
+pacman -S xorg xorg-server
+pacman -S gnome
+open gnome 
+systemctl enable gdm.service
+pacman -S terminator
+
+# поидее после этого додно быть все в полный экран но сука первый раз что то пошло не так 
+pacman -S gtkmm
+pacman -S open-vm-tools
+pacman -S xf86-video-wmware xf86-input-vmmouse
+systemctl enable vmtoolsd
+reboot now
+
+#base-finish 
+
+
+usermod --shell /usr/bin/zsh d3m0n
