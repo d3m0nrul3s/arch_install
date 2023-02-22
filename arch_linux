@@ -95,13 +95,23 @@ pacman -Sy
 
 pacman -Sgg | grep blackarch |awk '{print $1}' | sort -u | less
 
+#gnome
 pacman -S xorg xorg-server
 pacman -S gnome
 open gnome 
 systemctl enable gdm.service
-pacman -S terminator
+pacman -S terminator firefox 
 
-# поидее после этого додно быть все в полный экран но сука первый раз что то пошло не так 
+#i3
+sudo pacman -S xorg xorg-server nvidia xorg-xinit i3 i3-gaps terminator feh
+sudo pacman -S lightdm lightdm-gtk-greeter
+touch .xinitrc
+#.xinitrc
+#exec i3
+
+
+
+# устанавливал для виртуальной машины 
 pacman -S gtkmm
 pacman -S open-vm-tools
 pacman -S xf86-video-wmware xf86-input-vmmouse
