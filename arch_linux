@@ -114,7 +114,7 @@ touch .xinitrc
 # устанавливал для виртуальной машины 
 pacman -S gtkmm
 pacman -S open-vm-tools
-pacman -S xf86-video-wmware xf86-input-vmmouse
+pacman -S xf86-video-vmware xf86-input-vmmouse
 systemctl enable vmtoolsd
 reboot now
 
