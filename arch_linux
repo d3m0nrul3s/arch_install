@@ -122,3 +122,14 @@ reboot now
 
 
 usermod --shell /usr/bin/zsh d3m0n
+
+#driver 
+
+sudo pkill x 
+sudo pacman -S nvidia-390xx nvidia-390xx-libgl nvidia-390xx-utils nvidia-390xx-dkms
+reboot
+nvidia-xconfig
+reboot
+
+#grub-mkconfig -o /boot/grub/grub.cfg
+#mkinitcpio -P
