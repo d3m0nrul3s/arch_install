@@ -1,0 +1,89 @@
+# basic install 
+ping -c 1 ya.ru
+
+lsblk - смотрим диски
+
+cfdisk /dev/sda - выбираем диск для монтирования
+gpt 
+400mb	- выделяем для efi 
+/root *  write: yes; quit - остальное для пользователя
+
+lsblk
+mkfs.fat -F32 /dev/sda1 - форматируем диски
+mkfs.ext4 /dev/sda2
+
+- Монтируем диски
+mount /dev/sda2 /mnt
+mkdir /mnt/boot
+mount /dev/sda1 /mnt/boot
+pacstrap /mnt base linux linux-firmware
+
+- записать информацию о разделах
+genfstab -U /mnt >> /mnt/etc/fstab
+
+arch-chroot /mnt
+
+pacman -S dhcpcd nano sudo
+
+#eth0 dhcpcd
+systemctl enable dhcpcd.service 
+
+#wifi iwctl
+
+nano /etc/locale.gen
+en_US.UTF-8 UTF-8
+ru_RU.UTF-8 UTF-8
+locale-gen
+localectl set-locale ru_RU.UTF-8
+#settings time
+ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime
+date
+
+passwd
+useradd -m -g users -G wheel -s /bin/bash user_d
+passwd user_d
+EDITOR=nano visudo
+ALL.....(....)....
+
+#grub
+pacman -S grub efibootm
+mkdir /boot/efi
+mount /dev/sda1 /boot/efi
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable
+grub-mkconfig -o /boot/grub/grub.cfg
+exit
+umount -R /mnt
+reboot
+
+# Install i3 
+
+sudo pacman -S xorg xorg-xinit i3-gaps kitty ranger rofi falkon mpv 
+exec i3 >> /home/user/.xinitrc
+
+sudo pacman -S lightdm lightdm-gtk-greeter
+systemctl enable lightdm
+
+- network
+
+sudo pacman -S networkmanager
+sudo pacman -S network-manager-applet
+sudo systemctl enable NetworkManger.service
+
+- keyboard
+
+/etc/X11/xorg.conf.d/00-keyboard.conf
+"""
+Section "InputClass"
+	Identifier "system-keyboard"
+	MatchIsKeyboard "on"
+	Option "XkbLayout" "us,ru"
+	Option "XkbModel" "pc105"
+	Option "XkbOptions" "grp:ctrl_alt_toggle"
+EndSection
+"""
+sudo pacman -S numlockx
+
+#sound
+sudo pacman -S alsa-lib alsa-utils
+sudo pacman -S pulseaudio pavucontrol
+
