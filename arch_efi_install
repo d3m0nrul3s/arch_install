@@ -60,6 +60,17 @@ reboot
 sudo pacman -S xorg xorg-xinit i3-gaps kitty ranger rofi falkon mpv 
 exec i3 >> /home/user/.xinitrc
 
+
+chmod +x ~/.xinitrc
+
+sudo pacman -S ly
+sudo systemctl enable ly.service
+sudo systemctl start ly.service
+
+# config
+sudo vim /etc/ly/config.ini
+sudo systemctl restart ly.service
+and
 sudo pacman -S lightdm lightdm-gtk-greeter
 systemctl enable lightdm
 
